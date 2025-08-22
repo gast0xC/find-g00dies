@@ -1,12 +1,35 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Navigation } from "@/components/Navigation";
+import { MovieGrid } from "@/components/MovieGrid";
+import { topMovies, topTVShows } from "@/data/mockData";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState<'movies' | 'tv'>('movies');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const currentItems = activeTab === 'movies' ? topMovies : topTVShows;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gradient-cinema">
+      <Navigation 
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-cinema-text-primary mb-2">
+            Top Rated {activeTab === 'movies' ? 'Movies' : 'TV Shows'}
+          </h2>
+          <p className="text-cinema-text-secondary">
+            Discover the highest-rated content on IMDB
+          </p>
+        </div>
+        
+        <MovieGrid items={currentItems} searchQuery={searchQuery} />
+      </main>
     </div>
   );
 };
