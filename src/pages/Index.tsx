@@ -16,6 +16,7 @@ const Index = () => {
   const [movies, setMovies] = useState<Movie[]>(topMovies);
   const [tvShows, setTvShows] = useState<TVShow[]>(topTVShows);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
   const [dataSource, setDataSource] = useState<'mock' | 'tmdb'>('mock');
   const { toast } = useToast();
 
@@ -29,6 +30,11 @@ const Index = () => {
       loadTMDBData();
     }
   }, []);
+
+  // Clear genres when switching tabs
+  useEffect(() => {
+    setSelectedGenres([]);
+  }, [activeTab]);
 
   const loadTMDBData = async () => {
     setIsLoading(true);
@@ -88,6 +94,8 @@ const Index = () => {
         onTabChange={setActiveTab}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        selectedGenres={selectedGenres}
+        onGenreChange={setSelectedGenres}
       />
       
       <main className="container mx-auto px-4 py-8">
@@ -125,7 +133,8 @@ const Index = () => {
         
         <MovieGrid 
           items={currentItems} 
-          searchQuery={searchQuery} 
+          searchQuery={searchQuery}
+          selectedGenres={selectedGenres}
           useRealImages={dataSource === 'tmdb'}
         />
       </main>

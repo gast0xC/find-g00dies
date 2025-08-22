@@ -4,14 +4,22 @@ import { MediaItem, getTitle } from "@/types/movie";
 interface MovieGridProps {
   items: MediaItem[];
   searchQuery: string;
+  selectedGenres: number[];
   useRealImages?: boolean;
 }
 
-export const MovieGrid = ({ items, searchQuery, useRealImages = false }: MovieGridProps) => {
-  const filteredItems = items.filter(item => 
-    getTitle(item).toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.overview.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+export const MovieGrid = ({ items, searchQuery, selectedGenres, useRealImages = false }: MovieGridProps) => {
+  const filteredItems = items.filter(item => {
+    // Filter by search query
+    const matchesSearch = getTitle(item).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.overview.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Filter by selected genres
+    const matchesGenres = selectedGenres.length === 0 || 
+      selectedGenres.some(genreId => item.genre_ids.includes(genreId));
+    
+    return matchesSearch && matchesGenres;
+  });
 
   if (filteredItems.length === 0) {
     return (

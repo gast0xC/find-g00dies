@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
-import { MediaItem, getTitle, getReleaseYear } from "@/types/movie";
+import { MediaItem, getTitle, getReleaseYear, isMovie } from "@/types/movie";
 import { getPosterUrl } from "@/data/mockData";
 import { getRealPosterUrl } from "@/services/tmdbService";
+import { getGenreNames } from "@/data/genres";
 
 interface MovieCardProps {
   item: MediaItem;
@@ -12,6 +13,7 @@ interface MovieCardProps {
 
 export const MovieCard = ({ item, useRealImages = false }: MovieCardProps) => {
   const posterUrl = useRealImages ? getRealPosterUrl(item.poster_path) : getPosterUrl(item.poster_path);
+  const genres = getGenreNames(item.genre_ids.slice(0, 2), !isMovie(item));
   return (
     <Card className="group relative overflow-hidden bg-gradient-card border-cinema-border hover:shadow-card-hover transition-smooth cursor-pointer">
       <div className="aspect-[2/3] relative overflow-hidden">
@@ -36,6 +38,18 @@ export const MovieCard = ({ item, useRealImages = false }: MovieCardProps) => {
         <p className="text-sm text-cinema-text-secondary mb-2">
           {getReleaseYear(item)}
         </p>
+        
+        {/* Genre badges */}
+        {genres.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {genres.map((genre) => (
+              <Badge key={genre} variant="outline" className="text-xs">
+                {genre}
+              </Badge>
+            ))}
+          </div>
+        )}
+        
         <p className="text-xs text-cinema-text-secondary line-clamp-2 opacity-0 group-hover:opacity-100 transition-smooth">
           {item.overview}
         </p>
