@@ -4,9 +4,10 @@ import { MediaItem, getTitle } from "@/types/movie";
 interface MovieGridProps {
   items: MediaItem[];
   searchQuery: string;
+  useRealImages?: boolean;
 }
 
-export const MovieGrid = ({ items, searchQuery }: MovieGridProps) => {
+export const MovieGrid = ({ items, searchQuery, useRealImages = false }: MovieGridProps) => {
   const filteredItems = items.filter(item => 
     getTitle(item).toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.overview.toLowerCase().includes(searchQuery.toLowerCase())
@@ -28,7 +29,7 @@ export const MovieGrid = ({ items, searchQuery }: MovieGridProps) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
       {filteredItems.map((item) => (
-        <MovieCard key={item.id} item={item} />
+        <MovieCard key={item.id} item={item} useRealImages={useRealImages} />
       ))}
     </div>
   );

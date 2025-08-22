@@ -3,17 +3,20 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { MediaItem, getTitle, getReleaseYear } from "@/types/movie";
 import { getPosterUrl } from "@/data/mockData";
+import { getRealPosterUrl } from "@/services/tmdbService";
 
 interface MovieCardProps {
   item: MediaItem;
+  useRealImages?: boolean;
 }
 
-export const MovieCard = ({ item }: MovieCardProps) => {
+export const MovieCard = ({ item, useRealImages = false }: MovieCardProps) => {
+  const posterUrl = useRealImages ? getRealPosterUrl(item.poster_path) : getPosterUrl(item.poster_path);
   return (
     <Card className="group relative overflow-hidden bg-gradient-card border-cinema-border hover:shadow-card-hover transition-smooth cursor-pointer">
       <div className="aspect-[2/3] relative overflow-hidden">
         <img 
-          src={getPosterUrl(item.poster_path)}
+          src={posterUrl}
           alt={getTitle(item)}
           className="w-full h-full object-cover transition-smooth group-hover:scale-105"
         />
